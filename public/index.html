@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ソースコード取得ツール</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f8f8f8;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>ソースコード取得ツール</h1>
+    <p>URLを入力し、「ソースコードを表示」ボタンをクリックしてください。</p>
+
+    <input type="text" id="urlInput" placeholder="URLを入力してください" style="width: 300px;">
+    <button onclick="fetchSource()">ソースコードを表示</button>
+
+    <h2>取得したソースコード</h2>
+    <pre id="sourceCode"></pre>
+
+    <script>
+        function fetchSource() {
+            const url = document.getElementById('urlInput').value;
+
+            if (!url) {
+                alert("URLを入力してください");
+                return;
+            }
+
+            // サーバーにリクエストを送り、指定されたURLのソースコードを取得
+            fetch(`/getSource?url=${encodeURIComponent(url)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("ソースコードを取得できませんでした");
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById('sourceCode').textContent = html;
+            })
+            .catch(error => {
+                alert("ソースコードを取得できませんでした: " + error.message);
+            });
+        }
+    </script>
+</body>
+</html>
